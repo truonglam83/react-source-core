@@ -1,9 +1,14 @@
-import type { SampleItem } from "./sample.type";
-import { GET_SAMPLE_LIST } from "../../utils/constants/endpoints";
-import { callApi } from "../../utils/functions/callApi";
+import { callApi } from "@/utils/api/api.util";
+import { GET_LIST_SAMPLE } from "@/constants/api.endpoint";
+import { GetSampleListPayload, GetSampleListResponse } from "./sample.type";
 
-export const getSampleList = () => {
-  return callApi<SampleItem[]>({
-    endpoint: GET_SAMPLE_LIST,
+/**
+ * Sample API call
+ */
+export const getSampleList = (payload: GetSampleListPayload) => {
+  return callApi<GetSampleListPayload, GetSampleListResponse>({
+    url: GET_LIST_SAMPLE,
+    method: "post",
+    data: payload,
   });
 };
