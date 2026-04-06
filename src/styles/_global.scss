@@ -3,6 +3,8 @@
  * Apply base styles for app
  */
 
+@use "./variables" as *;
+
 body {
   font-family: $font-family;
   color: $text-color;

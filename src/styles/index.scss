@@ -3,8 +3,6 @@
  * Import all global styles here
  */
 
-@import "./variables";
-@import "./mixins";
-@import "./reset";
-@import "./global";
-@import "./helpers";
+@use "./reset";
+@use "./global";
+@use "./helpers";

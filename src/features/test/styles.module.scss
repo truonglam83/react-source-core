@@ -1,0 +1,21 @@
+@use "@/styles/variables" as *;
+@use "@/styles/mixins" as *;
+
+.test_container {
+  @include flex-column;
+  align-items: center;
+  .test_css {
+    color: $text-color;
+    width: 120px;
+    padding: 15px;
+    background-color: $primary-color;
+    border-radius: 5px;
+    border: 0 none;
+
+    &:hover {
+      background-color: $primary-color-hover;
+      cursor: pointer;
+    }
+  }
+  gap: 20px;
+}
