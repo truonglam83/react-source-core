@@ -1,13 +1,13 @@
 // src/routes/route.guard.tsx
-
+import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { JSX } from "react";
-import { getUser } from "@/utils/auth/auth.utils";
+import { useAppSelector } from "@/store/hooks";
 
 export type Role = "ADMIN" | "USER";
 
 interface Props {
-  children: JSX.Element;
+  children: ReactNode;
   isPrivate?: boolean;
   roles?: Role[];
 }
@@ -20,23 +20,24 @@ interface Props {
  * - Check role permission
  *
  * NOTE:
- * - User info is handled in utils/auth
+ * - Use Redux as source of truth
  * - This file only handles routing logic
  */
 export const RouteGuard = ({ children, isPrivate, roles }: Props) => {
-  const user = getUser();
+  const user = useAppSelector((state) => state.auth.user);
 
   /**
    * Check authentication
    */
-  if (isPrivate && !user.isAuthenticated) {
+
+  if (isPrivate && !user) {
     return <Navigate to="/login" replace />;
   }
 
   /**
    * Check role permission
    */
-  if (roles && !roles.includes(user.role)) {
+  if (roles && user && !roles.includes(user.role)) {
     return <div>403 - Forbidden</div>;
   }
 

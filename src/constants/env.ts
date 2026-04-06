@@ -18,10 +18,9 @@ export const ENV = {
   // Optional value with fallback
   APP_NAME: import.meta.env.VITE_APP_NAME || "App",
 
-  /**
-   * TEMP: default role for development
-   * Used when no token is available
-   * TODO: REMOVE when auth is fully implemented
-   */
-  DEFAULT_ROLE: import.meta.env.VITE_DEFAULT_ROLE || "USER",
+  MOCK_AUTH: {
+    TOKEN: import.meta.env.VITE_MOCK_TOKEN,
+    ROLE: import.meta.env.VITE_MOCK_ROLE,
+    USER_ID: import.meta.env.VITE_MOCK_USER_ID,
+  },
 };

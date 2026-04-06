@@ -1,0 +1,16 @@
+/**
+ * GLOBAL STYLE
+ * Apply base styles for app
+ */
+
+body {
+  font-family: $font-family;
+  color: $text-color;
+  background: $background-color;
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

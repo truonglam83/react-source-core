@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { ENV } from "@/constants/env";
-import { getAccessToken } from "../auth/auth.utils";
+import { store } from "@/store/store";
 /**
  * Axios instance
  */
@@ -17,7 +17,7 @@ const api = axios.create({
  */
 api.interceptors.request.use(
   (config) => {
-    const token = getAccessToken();
+    const token = store.getState().auth.accessToken;
 
     if (token) {
       config.headers = config.headers || {};

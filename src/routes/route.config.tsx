@@ -1,5 +1,6 @@
 // src/routes/route.config.tsx
 
+import { TestAuth } from "@/features/test/TestAuth";
 import { ReactNode } from "react";
 
 /**
@@ -20,7 +21,6 @@ export interface AppRoute {
 /* ===== MOCK PAGES (replace later) ===== */
 
 const LoginPage = () => <div>Login</div>;
-const DashboardPage = () => <div>Dashboard</div>;
 const SamplePage = () => <div>Sample</div>;
 
 /* ===== ROUTES ===== */
@@ -28,11 +28,11 @@ const SamplePage = () => <div>Sample</div>;
 export const routes: AppRoute[] = [
   {
     path: "/login",
-    element: <LoginPage />,
+    element: <TestAuth />,
   },
   {
     path: "/",
-    element: <DashboardPage />,
+    element: <TestAuth />,
     isPrivate: true,
     roles: ["ADMIN", "USER"],
   },
