@@ -19,11 +19,6 @@ function App() {
     <>
       {/* 🔥 Router */}
       <AppRouter />
-
-      {/* 
-        🧪 TEST ONLY (REMOVE LATER)
-      */}
-      {/* <TestAuth /> */}
     </>
   );
 }

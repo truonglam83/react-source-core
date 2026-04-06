@@ -1,45 +1,34 @@
-// src/routes/route.config.tsx
+import { HomePageTest } from "@/features/test/HomePageTest";
+import { LoginPageTest } from "@/features/test/LoginPageTest";
+import AuthLayout from "@/layouts/AuthLayout";
+import MainLayout from "@/layouts/MainLayout";
 
-import { TestAuth } from "@/features/test/TestAuth";
-import { ReactNode } from "react";
-
-/**
- * Define role type
- */
-export type Role = "ADMIN" | "USER";
-
-/**
- * Route type
- */
-export interface AppRoute {
-  path: string;
-  element: ReactNode;
-  isPrivate?: boolean;
-  roles?: Role[];
-}
-
-/* ===== MOCK PAGES (replace later) ===== */
-
-const LoginPage = () => <div>Login</div>;
-const SamplePage = () => <div>Sample</div>;
-
-/* ===== ROUTES ===== */
-
-export const routes: AppRoute[] = [
+export const routes = [
+  /**
+   * 🔐 AUTH ROUTES (NO HEADER / FOOTER)
+   */
   {
-    path: "/login",
-    element: <TestAuth />,
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "/login",
+        element: <LoginPageTest />,
+        isPrivate: false,
+      },
+    ],
   },
+
+  /**
+   * 🌐 MAIN ROUTES (WITH HEADER / FOOTER)
+   */
   {
-    path: "/",
-    element: <TestAuth />,
-    isPrivate: true,
-    roles: ["ADMIN", "USER"],
-  },
-  {
-    path: "/sample",
-    element: <SamplePage />,
-    isPrivate: true,
-    roles: ["ADMIN"],
+    element: <MainLayout />,
+    children: [
+      {
+        path: "/",
+        element: <HomePageTest />,
+        isPrivate: true,
+      },
+    ],
   },
 ];
