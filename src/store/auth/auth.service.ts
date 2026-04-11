@@ -1,71 +1,32 @@
-import { ENV } from "@/constants/env";
-import { setAuth, clearAuth } from "./auth.slice";
+// src/store/auth/auth.service.ts
+
 import { AppDispatch } from "@/store/store";
 import { decodeToken } from "@/utils/auth/auth.utils";
+import { resolvePermissions } from "@/utils/auth/permission-resolver";
+import { setAuth } from "./auth.slice";
+import { PermissionType, Role } from "@/types/auth.type";
 
 /**
- * Auth Service
- *
- * RULE:
- * - Single place for token decoding & mapping
- * - Do NOT decode token anywhere else
- */
-
-/**
- * 🔥 LOGIN WITH TOKEN (REAL FLOW)
+ * Login with JWT
  */
 export const loginWithToken = (token: string) => (dispatch: AppDispatch) => {
-  const decoded = decodeToken(token);
+  const decoded: any = decodeToken(token);
 
-  if (!decoded) {
-    console.error("Invalid token");
-    return;
-  }
+  const roles: Role[] = decoded.roles || (decoded.role ? [decoded.role] : []);
 
-  const user = {
-    id: decoded.userId, // ⚠️ if backend change → ONLY fix here
-    role: decoded.role,
-  };
+  const permissions = resolvePermissions(
+    roles,
+    decoded.permissions,
+  ) as PermissionType[];
 
   dispatch(
     setAuth({
-      accessToken: token,
-      user,
+      user: {
+        userId: decoded.userId,
+        roles,
+        permissions,
+      },
+      token,
     }),
   );
-};
-
-/**
- * 🧪 MOCK LOGIN
- */
-export const loginMock = () => (dispatch: AppDispatch) => {
-  const token = ENV.MOCK_AUTH?.TOKEN;
-
-  const decoded = token ? decodeToken(token) : null;
-
-  // 🔥 UPDATE: single mapping point
-  const user = decoded
-    ? {
-        id: decoded.userId,
-        role: decoded.role,
-      }
-    : {
-        // fallback mock
-        id: ENV.MOCK_AUTH?.USER_ID || "1",
-        role: ENV.MOCK_AUTH?.ROLE || "USER",
-      };
-
-  dispatch(
-    setAuth({
-      accessToken: token || "mock-token",
-      user,
-    }),
-  );
-};
-
-/**
- * 🚪 LOGOUT
- */
-export const logout = () => (dispatch: AppDispatch) => {
-  dispatch(clearAuth());
 };

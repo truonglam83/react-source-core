@@ -1,37 +1,41 @@
-import { AuthState } from "./auth.type";
+// src/store/auth/auth.slice.ts
+
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AuthState, User } from "@/types/auth.type";
 
 const initialState: AuthState = {
-  accessToken: null,
   user: null,
+  token: null,
 };
+
+/**
+ * Auth slice
+ */
 const authSlice = createSlice({
   name: "auth",
   initialState,
-
   reducers: {
     /**
-     * Set auth info (login success)
+     * Set auth data after login
      */
-    setAuth: (state, action: PayloadAction<AuthState>) => {
-      state.accessToken = action.payload.accessToken;
+    setAuth: (
+      state,
+      action: PayloadAction<{
+        user: User;
+        token: string;
+      }>,
+    ) => {
       state.user = action.payload.user;
+      state.token = action.payload.token;
     },
 
     /**
      * Clear auth (logout)
      */
     clearAuth: (state) => {
-      state.accessToken = null;
       state.user = null;
+      state.token = null;
     },
-
-    /**
-     * TODO: Maybe add refresh token logic here in the future
-     * - setRefreshToken
-     * - clearRefreshToken
-     * - refreshAccessToken (async thunk)
-     */
   },
 });
 

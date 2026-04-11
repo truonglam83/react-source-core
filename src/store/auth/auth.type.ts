@@ -1,14 +1,22 @@
-// src/store/auth/auth.type.ts
+export type Role = "ADMIN" | "USER";
 
-import { Role } from "@/types/auth.type";
+export const PERMISSIONS = {
+  USER_READ: "user.read",
+  USER_WRITE: "user.write",
+  USER_DELETE: "user.delete",
+  USER_UPDATE: "user.update",
+  ADMIN_READ: "admin.read",
+} as const;
 
-/**
- * Auth state in Redux store
- */
+export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
+
+export interface User {
+  userId: number;
+  roles: Role[];
+  permissions: Permission[];
+}
+
 export interface AuthState {
-  accessToken: string | null;
-  user: {
-    id: string;
-    role: Role;
-  } | null;
+  user: User | null;
+  token: string | null;
 }

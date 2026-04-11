@@ -1,44 +1,45 @@
-// src/routes/route.guard.tsx
-import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-import { JSX } from "react";
 import { useAppSelector } from "@/store/hooks";
-
-export type Role = "ADMIN" | "USER";
+import { PermissionType } from "@/types/auth.type";
 
 interface Props {
-  children: ReactNode;
+  children: React.ReactNode;
   isPrivate?: boolean;
-  roles?: Role[];
+  permissions?: PermissionType[];
 }
 
-/**
- * Route Guard
- *
- * Responsibilities:
- * - Check authentication
- * - Check role permission
- *
- * NOTE:
- * - Use Redux as source of truth
- * - This file only handles routing logic
- */
-export const RouteGuard = ({ children, isPrivate, roles }: Props) => {
-  const user = useAppSelector((state) => state.auth.user);
+export const RouteGuard = ({
+  children,
+  isPrivate = true, // 🔥 default private
+  permissions,
+}: Props) => {
+  const user = useAppSelector(
+    (state) => state.auth.user as { permissions: PermissionType[] } | null,
+  );
 
   /**
-   * Check authentication
+   * 1. Private route but not logged in → go login
    */
-
   if (isPrivate && !user) {
     return <Navigate to="/login" replace />;
   }
 
   /**
-   * Check role permission
+   * 2. Public route (login) but already logged in → go home
    */
-  if (roles && user && !roles.includes(user.role)) {
-    return <div>403 - Forbidden</div>;
+  if (isPrivate === false && user) {
+    return <Navigate to="/" replace />;
+  }
+
+  /**
+   * 3. Permission check
+   */
+  if (permissions?.length && user) {
+    const hasAccess = permissions.some((p) => user.permissions.includes(p));
+
+    if (!hasAccess) {
+      return <Navigate to="/403" replace />;
+    }
   }
 
   return children;

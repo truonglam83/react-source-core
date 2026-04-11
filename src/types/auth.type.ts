@@ -1,14 +1,34 @@
 // src/types/auth.type.ts
 
-/**
- * Role type used across app
- */
 export type Role = "ADMIN" | "USER";
 
 /**
- * User info type
+ * Permission constants
  */
-export interface UserInfo {
-  isAuthenticated: boolean;
-  role: Role;
+export const PERMISSIONS = {
+  USER_READ: "user.read",
+  USER_WRITE: "user.write",
+  USER_DELETE: "user.delete",
+  USER_UPDATE: "user.update",
+
+  ADMIN_READ: "admin.read",
+} as const;
+
+export type PermissionType = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
+
+/**
+ * User (core entity)
+ */
+export interface User {
+  userId: number;
+  roles: Role[]; // multi-role
+  permissions: PermissionType[];
+}
+
+/**
+ * Auth state
+ */
+export interface AuthState {
+  user: User | null;
+  token: string | null;
 }
