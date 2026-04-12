@@ -5,6 +5,7 @@ import { decodeToken } from "@/utils/auth/auth.utils";
 import { resolvePermissions } from "@/utils/auth/permission-resolver";
 import { setAuth } from "./auth.slice";
 import { PermissionType, Role } from "@/types/auth.type";
+import { saveToken } from "@/utils/auth/auth.storage";
 
 /**
  * Login with JWT
@@ -18,6 +19,7 @@ export const loginWithToken = (token: string) => (dispatch: AppDispatch) => {
     roles,
     decoded.permissions,
   ) as PermissionType[];
+  saveToken(token);
 
   dispatch(
     setAuth({
