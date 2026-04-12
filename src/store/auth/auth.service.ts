@@ -1,34 +1,30 @@
-// src/store/auth/auth.service.ts
+// Handle login logic
 
 import { AppDispatch } from "@/store/store";
+import { setAuth } from "./auth.slice";
 import { decodeToken } from "@/utils/auth/auth.utils";
 import { resolvePermissions } from "@/utils/auth/permission-resolver";
-import { setAuth } from "./auth.slice";
-import { PermissionType, Role } from "@/types/auth.type";
 import { saveToken } from "@/utils/auth/auth.storage";
 
-/**
- * Login with JWT
- */
-export const loginWithToken = (token: string) => (dispatch: AppDispatch) => {
-  const decoded: any = decodeToken(token);
+export const loginWithToken =
+  (accessToken: string, refreshToken: string) => (dispatch: AppDispatch) => {
+    const decoded: any = decodeToken(accessToken);
 
-  const roles: Role[] = decoded.roles || (decoded.role ? [decoded.role] : []);
+    const roles = decoded.roles || (decoded.role ? [decoded.role] : []);
+    const permissions = resolvePermissions(roles, decoded.permissions);
 
-  const permissions = resolvePermissions(
-    roles,
-    decoded.permissions,
-  ) as PermissionType[];
-  saveToken(token);
+    // Save tokens
+    saveToken(accessToken, refreshToken);
 
-  dispatch(
-    setAuth({
-      user: {
-        userId: decoded.userId,
-        roles,
-        permissions,
-      },
-      token,
-    }),
-  );
-};
+    // Update state
+    dispatch(
+      setAuth({
+        user: {
+          userId: decoded.userId,
+          roles,
+          permissions,
+        },
+        token: accessToken,
+      }),
+    );
+  };
